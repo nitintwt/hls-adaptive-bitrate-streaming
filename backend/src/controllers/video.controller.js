@@ -17,19 +17,24 @@ const s3Client = new S3Client({
 // key is name of the s3 bucket file for which we want to create access url
 const getObjectURL = async (key)=>{
   const command = new GetObjectCommand({
-    Bucket:"nitintwt27.hls",
+    Bucket:"nitintwt-hls-stream-files",
     Key:key
   })
   const url = await getSignedUrl(s3Client , command)
   return url
 }
 
+async function  init() {
+  console.log("URL" , await getObjectURL("Recording 2024-10-29 052426.mp4/master.m3u8"))
+}
+init()
+
 const putObjectUrl = async (req , res)=>{
   const {fileName , contentType} = req.query
   console.log(fileName , contentType)
   const command = new PutObjectCommand({
     Bucket:"nitintwt27.hls",
-    Key:`user-uploads/${fileName}`,
+    Key:`${fileName}`,
     contentType:contentType
   })
   const url = await getSignedUrl(s3Client , command)

@@ -3,15 +3,17 @@ import {Button, ButtonGroup} from "@nextui-org/button";
 import {Input} from "@nextui-org/input";
 import {Card, CardHeader, CardBody, CardFooter} from "@nextui-org/card";
 import  axios from 'axios'
+import {useCookies} from 'react-cookie'
 
 export function VideoUpload({ onVideoUpload }) {
   const [file, setFile] = useState(null)
+  const [cookies , setCookies] = useCookies()
 
   const handleFileChange = (e) => {
     if (e.target.files && e.target.files[0]) {
       const selectedFile = e.target.files[0]
       if (selectedFile.type.startsWith('video/')) {
-        console.log(file.name)
+        console.log("file",file)
         setFile(selectedFile)
       } else {
         setFile(null)
@@ -29,6 +31,7 @@ export function VideoUpload({ onVideoUpload }) {
           "Content-Type":file.type
         }    
       })
+      setCookies("uploadedFileName", {name:file.name})
       console.log("completed")
     } catch (error) {
       console.log("Something went wrong while uploading video" , error)
