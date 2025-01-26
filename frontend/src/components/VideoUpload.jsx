@@ -4,6 +4,7 @@ import {Input} from "@nextui-org/input";
 import {Card, CardHeader, CardBody, CardFooter} from "@nextui-org/card";
 import  axios from 'axios'
 import {useCookies} from 'react-cookie'
+import {Upload} from 'lucide-react'
 
 export function VideoUpload({ onVideoUpload }) {
   const [file, setFile] = useState(null)
@@ -40,26 +41,43 @@ export function VideoUpload({ onVideoUpload }) {
   }
 
   return (
-    <Card className="mt-6">
-      <CardHeader>
-        Upload Video
-      </CardHeader>
-      <CardBody>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <Input
-              id="file"
-              type="file"
-              onChange={handleFileChange}
-              accept="video/*"
-              required
-            />
+    <div className="w-full">
+      <h2 className="text-2xl font-semibold mb-4">Upload Video</h2>
+      <form
+        onSubmit={handleSubmit}
+        className="w-full"
+      >
+        <div
+          className={`relative border-2 border-dashed rounded-lg p-8 text-center border-indigo-400 bg-gray-800`}
+        >
+          <input
+            type="file"
+            accept="video/*"
+            onChange={handleFileChange}
+            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+          />
+          
+          <div className="space-y-4">
+            <Upload className="mx-auto h-12 w-12 text-gray-400" />
+            <div className="space-y-2">
+              <p className="text-lg font-medium text-gray-900">
+                {file ? file.name : 'Drop your video here'}
+              </p>
+              <p className="text-sm text-gray-500">
+                or click to select a file
+              </p>
+            </div>
+            {file && (
+              <button
+                type="submit"
+                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-400"
+              >
+                Upload Video
+              </button>
+            )}
           </div>
-          <Button type="submit"  color="primary" variant="solid">
-            Upload Video
-          </Button>
-        </form>
-      </CardBody>
-    </Card>
+        </div>
+      </form>
+    </div>
   )
 }
