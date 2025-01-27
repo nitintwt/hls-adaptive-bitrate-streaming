@@ -11,7 +11,7 @@ app.use(cors({
 app.use(express.json({limit:'16kb'})) 
 
 app.get("/", (req , res)=>{
-  return res.status(200).json({message:"Hello from hsl"})
+  return res.status(200).json({message:"Hello from HLS"})
 })
 
 app.use("/api/v1/video", videoRouter)

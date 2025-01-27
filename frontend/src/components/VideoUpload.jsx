@@ -1,7 +1,4 @@
-import { useState, ChangeEvent, FormEvent } from 'react'
-import {Button, ButtonGroup} from "@nextui-org/button";
-import {Input} from "@nextui-org/input";
-import {Card, CardHeader, CardBody, CardFooter} from "@nextui-org/card";
+import { useState, ChangeEvent, FormEvent, Fragment } from 'react'
 import  axios from 'axios'
 import {useCookies} from 'react-cookie'
 import {Upload} from 'lucide-react'
@@ -14,7 +11,6 @@ export function VideoUpload({ onVideoUpload }) {
     if (e.target.files && e.target.files[0]) {
       const selectedFile = e.target.files[0]
       if (selectedFile.type.startsWith('video/')) {
-        console.log("file",file)
         setFile(selectedFile)
       } else {
         setFile(null)
@@ -22,8 +18,16 @@ export function VideoUpload({ onVideoUpload }) {
     }
   }
 
+  /*
+  I am using a private s3 bucket to upload the video , and to upload this video I need a s3 bucket's 
+  pre signed url. And using this pre signed url user will upload the video to my private S3 bucket,
+  inbehalf of me. 
+  
+  */
+
   const handleSubmit = async(e) => {
     e.preventDefault()
+    console.log("started")
     try {
       const s3PutUrl = await axios.get(`http://localhost:3000/api/v1/video/putObjectUrl?fileName=${file.name}&&contentType=${file.type}`)
       console.log(s3PutUrl.data.message)
@@ -42,9 +46,7 @@ export function VideoUpload({ onVideoUpload }) {
 
   return (
     <div className="w-full">
-      <h2 className="text-2xl font-semibold mb-4">Upload Video</h2>
-      <form
-        onSubmit={handleSubmit}
+      <div
         className="w-full"
       >
         <div
@@ -56,7 +58,6 @@ export function VideoUpload({ onVideoUpload }) {
             onChange={handleFileChange}
             className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
           />
-          
           <div className="space-y-4">
             <Upload className="mx-auto h-12 w-12 text-gray-400" />
             <div className="space-y-2">
@@ -66,18 +67,22 @@ export function VideoUpload({ onVideoUpload }) {
               <p className="text-sm text-gray-500">
                 or click to select a file
               </p>
+              <p className='text-bold text-white'>upto 512mb videos can only be processed</p>
             </div>
-            {file && (
-              <button
-                type="submit"
-                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-400"
-              >
-                Upload Video
-              </button>
-            )}
           </div>
         </div>
-      </form>
+      </div>
+      {file && (
+        <div className='text-center m-5'>
+        <button
+          type="submit"
+          className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-400"
+          onClick={handleSubmit}
+        >
+          Upload Video
+        </button>
+        </div>
+      )}
     </div>
   )
 }

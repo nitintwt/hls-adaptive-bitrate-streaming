@@ -29,6 +29,7 @@ async function  init() {
 }
 init()
 
+// function to generate a pre signed url to upload a video to my private s3 bucket
 const putObjectUrl = async (req , res)=>{
   const {fileName , contentType} = req.query
   console.log(fileName , contentType)
@@ -40,6 +41,5 @@ const putObjectUrl = async (req , res)=>{
   const url = await getSignedUrl(s3Client , command)
   return res.status(200).json({message: url})
 }
-
 
 export {putObjectUrl}

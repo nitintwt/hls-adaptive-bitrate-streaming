@@ -3,12 +3,14 @@ import { useRef } from 'react';
 import VideoPlayer from '../components/VideoPlayer';
 import { VideoUpload } from '../components/VideoUpload'
 import { useCookies } from 'react-cookie';
+import videojs from 'video.js';
 
 function Home() {
   const [cookies] = useCookies()
   console.log("cookies" , cookies?.uploadedFileName?.name)
 
   const encodedVideoName = encodeURIComponent(cookies?.uploadedFileName?.name)
+
   const masterPlaylistUrl = `https://nitintwt-hls-stream-files.s3.ap-south-1.amazonaws.com/${encodedVideoName}/master.m3u8`;
 
   const playerRef = useRef(null);
@@ -26,16 +28,15 @@ function Home() {
 
   const handlePlayerReady = (player) => {
     playerRef.current = player;
-
-    // You can handle player events here, for example:
     player.on('waiting', () => {
       videojs.log('player is waiting');
     });
 
     player.on('dispose', () => {
       videojs.log('player will dispose');
-    });
-  };
+    })
+  }
+
   return (
     <section className="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto ">
       <div className="text-center mb-12">
@@ -46,15 +47,15 @@ function Home() {
           Upload and stream your videos with our advanced HLS streaming platform
         </p>
       </div>
-
       <div className="grid md:grid-cols-2 gap-8">
         <div className="bg-gray-800 rounded-lg shadow-lg p-6">
           <VideoUpload />
         </div>
         <div className="bg-gray-800 rounded-lg shadow-lg p-6">
           <h2 className="text-2xl font-semibold mb-4 text-white">Preview</h2>
-          <div className="aspect-video bg-gray-900 rounded-lg overflow-hidden">
-            <VideoPlayer />
+          <p className='text-gray-400 font-semibold pb-5'>The longer the video, the more time it will take to process. Refresh the page every minute to start streaming the video.</p>
+          <div className=" aspect-video bg-gray-900  rounded-lg overflow-hidden">
+            <VideoPlayer options={videoJsOptions} onReady={handlePlayerReady} />
           </div>
         </div>
       </div>
