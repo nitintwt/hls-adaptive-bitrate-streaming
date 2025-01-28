@@ -2,10 +2,13 @@ import { useState, ChangeEvent, FormEvent, Fragment } from 'react'
 import  axios from 'axios'
 import {useCookies} from 'react-cookie'
 import {Upload} from 'lucide-react'
+import {Toaster , toast} from "sonner"
 
 export function VideoUpload({ onVideoUpload }) {
   const [file, setFile] = useState(null)
   const [cookies , setCookies] = useCookies()
+
+  console.log("uploader")
 
   const handleFileChange = (e) => {
     if (e.target.files && e.target.files[0]) {
@@ -27,6 +30,7 @@ export function VideoUpload({ onVideoUpload }) {
   const handleSubmit = async(e) => {
     e.preventDefault()
     console.log("started")
+    toast.info("uploading...")
     try {
       const s3PutUrl = await axios.get(`https://hls-adaptive-bitrate-streaming.onrender.com/api/v1/video/putObjectUrl?fileName=${file.name}&&contentType=${file.type}`)
       console.log(s3PutUrl.data.message)
@@ -36,7 +40,8 @@ export function VideoUpload({ onVideoUpload }) {
         }    
       })
       setCookies("uploadedFileName", {name:file.name})
-      console.log("completed")
+      toast.success("uploaded")
+      setFile(null)
     } catch (error) {
       console.log("Something went wrong while uploading video" , error)
     }
@@ -82,6 +87,7 @@ export function VideoUpload({ onVideoUpload }) {
         </button>
         </div>
       )}
+      <Toaster position="bottom-center" />
     </div>
   )
 }

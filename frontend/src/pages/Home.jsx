@@ -2,29 +2,11 @@ import React from 'react'
 import { useRef } from 'react';
 import VideoPlayer from '../components/VideoPlayer';
 import { VideoUpload } from '../components/VideoUpload'
-import { useCookies } from 'react-cookie';
+
 import videojs from 'video.js';
 
 function Home() {
-  const [cookies] = useCookies()
-  console.log("cookies" , cookies?.uploadedFileName?.name)
-
-  const encodedVideoName = encodeURIComponent(cookies?.uploadedFileName?.name)
-
-  const masterPlaylistUrl = `https://nitintwt-hls-stream-files.s3.ap-south-1.amazonaws.com/${encodedVideoName}/master.m3u8`;
-
   const playerRef = useRef(null);
-
-  const videoJsOptions = {
-    autoplay: true,
-    controls: true,
-    responsive: true,
-    fluid: true,
-    sources: [{
-      src: masterPlaylistUrl,
-      type: 'application/x-mpegURL'
-    }],
-  };
 
   const handlePlayerReady = (player) => {
     playerRef.current = player;
@@ -53,9 +35,9 @@ function Home() {
         </div>
         <div className="bg-gray-800 rounded-lg shadow-lg p-6">
           <h2 className="text-2xl font-semibold mb-4 text-white">Preview</h2>
-          <p className='text-gray-400 font-semibold pb-5'>The longer the video, the more time it will take to process. Refresh the page every minute to start streaming the video.</p>
+          <p className='text-gray-400 font-semibold pb-5'>The longer the video, the more time it will take to process. Once processing is complete, the video will automatically start streaming.</p>
           <div className=" aspect-video bg-gray-900  rounded-lg overflow-hidden">
-            <VideoPlayer options={videoJsOptions} onReady={handlePlayerReady} />
+            <VideoPlayer onReady={handlePlayerReady} />
           </div>
         </div>
       </div>
