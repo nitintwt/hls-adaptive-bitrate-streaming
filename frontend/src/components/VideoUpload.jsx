@@ -19,17 +19,16 @@ export function VideoUpload({ onVideoUpload }) {
   }
 
   /*
-  I am using a private s3 bucket to upload the video , and to upload this video I need a s3 bucket's 
-  pre signed url. And using this pre signed url user will upload the video to my private S3 bucket,
-  inbehalf of me. 
-  
+    I am using a private s3 bucket to upload the video , and to upload this video I need a s3 bucket's 
+    pre signed url. And using this pre signed url user will upload the video to my private S3 bucket,
+    inbehalf of me.
   */
 
   const handleSubmit = async(e) => {
     e.preventDefault()
     console.log("started")
     try {
-      const s3PutUrl = await axios.get(`http://localhost:3000/api/v1/video/putObjectUrl?fileName=${file.name}&&contentType=${file.type}`)
+      const s3PutUrl = await axios.get(`https://hls-adaptive-bitrate-streaming.onrender.com/api/v1/video/putObjectUrl?fileName=${file.name}&&contentType=${file.type}`)
       console.log(s3PutUrl.data.message)
       await axios.put(s3PutUrl.data.message , file , {
         headers:{

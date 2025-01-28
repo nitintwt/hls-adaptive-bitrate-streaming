@@ -27,7 +27,7 @@ const getObjectURL = async (key)=>{
 async function  init() {
   console.log("URL" , await getObjectURL("Recording 2024-10-29 052426.mp4/master.m3u8"))
 }
-init()
+init() 
 
 // function to generate a pre signed url to upload a video to my private s3 bucket
 const putObjectUrl = async (req , res)=>{
